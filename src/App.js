@@ -1,23 +1,46 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import Chat from './Chat';
+import Login from './Login';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import './App.css';
 
 function App() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogout = () => {
+    const auth = getAuth();
+    signOut(auth).then(() => {
+      setUser(null);
+    }).catch((error) => {
+      console.error("Error logging out: ", error);
+    });
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Real-time Chat</h1>
+      {user ? (
+        <>
+          <Chat user={user} />
+          <button onClick={handleLogout}>Logout</button>
+        </>
+      ) : (
+        <Login onLogin={setUser} />
+      )}
     </div>
   );
 }
