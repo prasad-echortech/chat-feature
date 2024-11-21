@@ -51,7 +51,6 @@ const Chat = ({ user }) => {
     return () => unsubscribe();
   }, [messageCount, messages.length, user.email]);
 
-  // Send a message
   const sendMessage = () => {
     if (message.trim() && recipient.trim()) {
       const messagesRef = ref(database, 'messages');
@@ -59,7 +58,7 @@ const Chat = ({ user }) => {
         text: message,
         user: user.email,
         timestamp: Date.now(),
-        participants: [user.email, recipient], // Include both sender and recipient
+        participants: [user.email, recipient],
         readBy: [],
       });
       sendSound.play();
@@ -69,7 +68,6 @@ const Chat = ({ user }) => {
     }
   };
 
-  // Mark messages as read
   const markAsRead = (msg) => {
     if (msg.user !== user.email && !msg.readBy.includes(user.email)) {
       const messageRef = ref(database, `messages/${msg.id}`);
@@ -87,17 +85,15 @@ const Chat = ({ user }) => {
     });
   }, [messages, user.email]);
 
-  // Load more messages
   const loadMoreMessages = () => {
     setMessageCount((prevCount) => prevCount + 10);
   };
 
-  // Handle emoji selection
   const onEmojiClick = (emojiObject) => {
     setMessage((prevInput) => prevInput + emojiObject.emoji);
   };
 
-  // Clear chat
+
   const clearChat = () => {
     const userMessages = messages.filter((msg) => msg.user === user.email);
     userMessages.forEach((msg) => {
@@ -106,7 +102,6 @@ const Chat = ({ user }) => {
     });
   };
 
-  // Handle Enter key press
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
