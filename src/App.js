@@ -32,11 +32,13 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Real-time Chat</h1>
+      <h1 style={{ color: "white", fontWeight: "bold", backgroundColor: "green", padding: 7 }}>Real-time Chat Website</h1>
+      {user?.email ? (<p><span style={{ color: "blue", fontWeight: "bold" }}>{user?.email}</span> Logged in </p>
+      ) : ""}
       {user ? (
         <>
           <Chat user={user} />
-          <button onClick={handleLogout}>Logout</button>
+          <button style={{marginBottom:"1.4rem", padding:6}} onClick={handleLogout}>Logout</button>
         </>
       ) : (
         <Login onLogin={setUser} />
